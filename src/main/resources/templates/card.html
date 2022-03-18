@@ -1,0 +1,22 @@
+<div th:fragment="card">
+    <div class="card" style="width: 15rem;">
+        <img src="/images/frog.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">
+                <strong>Title: </strong>
+                <span th:text="${review.title}"></span>
+            </h5>
+            <div class="card-text">
+                <span>Author: </span>
+                <a th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
+            </div>
+            <div class="card-likes">
+                <a th:onclick="'javascript:likeAction(\''+${review.reviewId}+'\');'"><i th:id="'like-button' + ${review.reviewId}" th:class="${review.liked} ? 'fa-heart fa-solid' : 'fa-heart fa-regular'"></i></a>
+                <span th:id="'likes-amount' + ${review.reviewId}" th:text="${review.likes}"></span>
+            </div>
+            <div class="card-buttons text-center">
+                <a th:href="'/reviews/'+${review.reviewId}" class="btn btn-primary">Read</a>
+            </div>
+        </div>
+    </div>
+</div>
