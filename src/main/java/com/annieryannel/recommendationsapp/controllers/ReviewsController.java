@@ -7,6 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,9 +22,10 @@ public class ReviewsController {
         return reviewService.loadAllCards();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/reviews/{reviewId}/like")
     public Integer likeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
-        return reviewService.likeReview(reviewId, authentication.getName());
+       return reviewService.likeReview(reviewId, authentication.getName());
     }
 
     @DeleteMapping("/reviews/{reviewId}/like")
