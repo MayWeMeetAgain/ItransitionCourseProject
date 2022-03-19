@@ -19,11 +19,6 @@ public class ReviewsController {
         return reviewService.loadAllCards();
     }
 
-    @PostMapping("/addReview")
-    public void addCard(CardDTO dto, Authentication authentication) {
-        dto.setAuthorName(authentication.getName());
-        reviewService.saveCard(dto);
-    }
 
     @PostMapping("/reviews/{reviewId}/like")
     public Integer likeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {

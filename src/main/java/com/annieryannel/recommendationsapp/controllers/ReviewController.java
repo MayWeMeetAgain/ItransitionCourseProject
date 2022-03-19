@@ -28,4 +28,12 @@ public class ReviewController {
     public String addReview() {
         return "addreview";
     }
+
+    @PostMapping("/addReview")
+    public String addCard(CardDTO dto, Authentication authentication) {
+        dto.setAuthorName(authentication.getName());
+        reviewService.saveCard(dto);
+
+        return "login";
+    }
 }
