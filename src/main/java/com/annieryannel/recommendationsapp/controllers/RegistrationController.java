@@ -26,28 +26,27 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String registerUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
-//        if (!isPasswordMatch(model, userForm) || doesUserExist(model, userForm)) {
-//            return "registration";
-//        }
-        userService.saveUser(userForm);
+        if (!isPasswordMatch(model, userForm) || doesUserExist(model, userForm)) {
+            return "registration";
+        }
         model.addAttribute("registered", "You have been successfully registered");
         return "login";
     }
 
 
-//    private boolean isPasswordMatch(Model model, User userForm) {
-//        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
-//            model.addAttribute("passwordError", "Passwords don't match");
-//            return false;
-//        }
-//        return true;
-//    }
+    private boolean isPasswordMatch(Model model, User userForm) {
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+            model.addAttribute("passwordError", "Passwords don't match");
+            return false;
+        }
+        return true;
+    }
 
-//    private boolean doesUserExist(Model model, User userForm) {
-//        if (!userService.saveUser(userForm)){
-//            model.addAttribute("usernameError", "User with this username already exist");
-//            return true;
-//        }
-//        return false;
-//    }
+    private boolean doesUserExist(Model model, User userForm) {
+        if (!userService.saveUser(userForm)){
+            model.addAttribute("usernameError", "User with this username already exist");
+            return true;
+        }
+        return false;
+    }
 }

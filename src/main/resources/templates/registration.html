@@ -9,8 +9,8 @@
 <div class="container-md mt-5 text-center" style="width: 25rem;">
     <h3 class="mb-3 text-center">Please Sign Up</h3>
     <form th:action="@{/registration}" method="post">
-<!--        <div class="text-center text-danger" th:if="${passwordError}" th:text="${passwordError}"></div>-->
-<!--        <div class="text-center text-danger" th:if="${usernameError}" th:text="${usernameError}"></div>-->
+        <div class="text-center text-danger" th:if="${passwordError}" th:text="${passwordError}"></div>
+        <div class="text-center text-danger" th:if="${usernameError}" th:text="${usernameError}"></div>
         <div class="mb-1"><label class="row justify-content-between"> User Name: <input class="mt-1" type="text" name="username" required autofocus></label></div>
         <div class="mb-1"><label class="row justify-content-between"> Email: <input class="mt-1" type="email" name="email" placeholder="name@example.com" required autofocus/> </label></div>
         <div class="mb-1"><label class="row justify-content-between"> Password: <input class="mt-1" type="password" name="password" required autofocus/> </label></div>
