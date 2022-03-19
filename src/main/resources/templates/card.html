@@ -3,11 +3,11 @@
         <img src="/images/frog.jpg" class="card-img-top" alt="...">
         <div class="card-body">
             <h5 class="card-title">
-                <strong>Title: </strong>
+                <strong th:text="#{review.title}"></strong>
                 <span th:text="${review.title}"></span>
             </h5>
             <div class="card-text">
-                <span>Author: </span>
+                <span th:text="#{review.author}"></span>
                 <a th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
             </div>
             <div class="card-likes">

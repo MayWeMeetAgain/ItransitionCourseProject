@@ -10,16 +10,16 @@
 <body class="text-center bg-dark bg-gradient">
     <div th:insert="header :: header"></div>
     <div sec:authorize="isAuthenticated()">
-        Welcome, <span sec:authentication="name"></span>
+        <div>
+            <span th:text="#{greeting}"></span>
+            <span sec:authentication="name"></span>
+        </div>
     </div>
     <div class="container-md">
     <div style="display: flex; flex-direction: row; flex-wrap: wrap;" id="cards_list">
         <div class="m-2" th:each="review : ${cards}" th:insert="card.html :: card"></div>
     </div>
     </div>
-    <form class="m-4" th:action="@{/logout}" method="post">
-        <button class="btn btn-primary mt-3" type="submit">Sign Out</button>
-    </form>
 </body>
 <!--<script src="js/getAllCards.js"></script>-->
 <script src="js/like.js"></script>
