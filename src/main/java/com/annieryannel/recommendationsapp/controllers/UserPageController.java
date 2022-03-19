@@ -27,18 +27,6 @@ public class UserPageController {
         model.addAttribute("user", user);
         model.addAttribute("reviews", reviewService.loadAllCardsByUserId(user.getId()));
         model.addAttribute("likes", userService.countLikes(user));
-        return "/userpage";
+        return "userpage";
     }
-
-    @GetMapping("/user/{username}/addreview")
-    public String addReview(Model model) {
-        model.addAttribute("reviewForm", new Review());
-        return "/addreview";
-    }
-
-//    @PostMapping("/user/{username}/addreview")
-//    public String saveReview(@PathVariable("username") String username, @ModelAttribute("userForm") Review review) {
-//        reviewService.saveReview(review, username);
-//        return "/addreview";
-//    }
 }
