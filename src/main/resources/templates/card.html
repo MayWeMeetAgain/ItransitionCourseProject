@@ -11,7 +11,7 @@
                 <a th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
             </div>
             <div class="card-likes">
-                <button class="btn btn-light btn-sm" type="button" th:onclick="'javascript:likeAction(\''+${review.reviewId}+'\');'" th:disabled="${#authorization.expression('!isAuthenticated()')}">
+                <button class="btn btn-light btn-sm" type="button" th:onclick="'javascript:likeAction(\''+${review.reviewId}+'\');'">
                     <i th:id="'like-button' + ${review.reviewId}" th:class="${review.liked} ? 'fa-heart fa-solid' : 'fa-heart fa-regular'"></i>
                     <span th:id="'likes-amount' + ${review.reviewId}" th:text="${review.likes}"></span>
                 </button>

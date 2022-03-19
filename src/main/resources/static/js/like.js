@@ -11,7 +11,10 @@ function sendLikeRequest(type, url, likesAmount, likeButton) {
         type: type,
         url: url,
         success: function(answer) { successHandler(answer, likesAmount, likeButton); },
-        error: function(){}
+        error: function(jqXHR, timeout, message) {
+            if (jqXHR.status === 401)
+                location.href="/login";
+        }
     });
 }
 
