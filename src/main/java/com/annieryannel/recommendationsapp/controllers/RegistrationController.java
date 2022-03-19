@@ -30,7 +30,7 @@ public class RegistrationController {
             return "registration";
         }
         model.addAttribute("registered", "You have been successfully registered");
-        return "/login";
+        return "redirect:/login";
     }
 
 
