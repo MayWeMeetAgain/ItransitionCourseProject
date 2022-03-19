@@ -3,6 +3,7 @@ package com.annieryannel.recommendationsapp.controllers;
 import com.annieryannel.recommendationsapp.DTO.CardDTO;
 import com.annieryannel.recommendationsapp.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,6 @@ public class ReviewsController {
     public List<CardDTO> getAllCards() {
         return reviewService.loadAllCards();
     }
-
 
     @PostMapping("/reviews/{reviewId}/like")
     public Integer likeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
