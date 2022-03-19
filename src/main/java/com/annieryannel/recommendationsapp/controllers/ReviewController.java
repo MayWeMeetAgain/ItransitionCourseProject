@@ -34,6 +34,6 @@ public class ReviewController {
         dto.setAuthorName(authentication.getName());
         reviewService.saveCard(dto);
 
-        return "login";
+        return "addreview";
     }
 }
