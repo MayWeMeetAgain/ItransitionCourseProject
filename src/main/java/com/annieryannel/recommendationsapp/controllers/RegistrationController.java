@@ -25,12 +25,12 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String registerUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult, Model model) {
+    public String registerUser(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
         if (!isPasswordMatch(model, userForm) || doesUserExist(model, userForm)) {
             return "registration";
         }
         model.addAttribute("registered", "You have been successfully registered");
-        return "redirect:/login";
+        return "login";
     }
 
 
