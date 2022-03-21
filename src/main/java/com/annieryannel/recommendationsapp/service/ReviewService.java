@@ -4,15 +4,19 @@ import com.annieryannel.recommendationsapp.DTO.CardDTO;
 import com.annieryannel.recommendationsapp.models.Review;
 import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
+import com.annieryannel.recommendationsapp.repositories.SearchRepository;
 import com.annieryannel.recommendationsapp.repositories.UserRepository;
+import com.annieryannel.recommendationsapp.repositories.impl.SearchRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ReviewService {
 
     @Autowired
@@ -20,7 +24,6 @@ public class ReviewService {
 
     @Autowired
     ReviewRepository reviewRepository;
-
 
     public List<Review> loadAllReviews() {
         return reviewRepository.findAll();
@@ -94,5 +97,10 @@ public class ReviewService {
         review.removeLike(user);
         saveReview(review);
         return review.getLikes().size();
+    }
+
+    public List<CardDTO> search(String text) {
+        List<Review> reviews = reviewRepository.search(text);
+        return reviews.stream().map(this::makeDto).collect(Collectors.toList());
     }
 }

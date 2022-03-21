@@ -3,6 +3,10 @@ package com.annieryannel.recommendationsapp.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "reviews")
+@Indexed(index = "index_review")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,10 +25,12 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @FullTextField
     @Column(name = "title")
     @NotBlank
     private String title;
 
+    @FullTextField
     @Column(name = "text")
     private String text;
 
