@@ -64,4 +64,8 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.search(text);
         return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
     }
+
+    public void deleteReviewById(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
 }

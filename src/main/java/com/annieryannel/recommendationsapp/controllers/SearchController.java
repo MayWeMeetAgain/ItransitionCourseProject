@@ -27,7 +27,7 @@ public class SearchController {
         } catch (Exception ex) {
             // Nothing
         }
-        model.addAttribute("search", searchResults);
+        model.addAttribute("cards", searchResults);
         return "searchresults";
 
     }

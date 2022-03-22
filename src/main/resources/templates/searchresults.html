@@ -10,9 +10,7 @@
 <body class="text-center bg-dark bg-gradient">
 <div th:insert="header :: header"></div>
 <div class="container-md">
-    <div style="display: flex; flex-direction: row; flex-wrap: wrap;" id="cards_list">
-        <div class="m-2" th:each="review : ${search}" th:insert="card.html :: card"></div>
-    </div>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap;" id="cards_list" th:insert="card.html :: card"></div>
 </div>
 </body>
 <script src="js/like.js"></script>

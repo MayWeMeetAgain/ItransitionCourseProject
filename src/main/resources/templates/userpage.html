@@ -13,8 +13,8 @@
     <strong>Name</strong><div th:text="${user.username}"></div>
     <div th:text="${likes}">likes</div>
 </div>
-<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-    <div class="m-2" th:each="review : ${reviews}" th:insert="card.html :: card"></div>
+<div class="container-md">
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap;" id="cards_list" th:insert="card.html :: card"></div>
 </div>
 </body>
 <script src="../js/like.js"></script>

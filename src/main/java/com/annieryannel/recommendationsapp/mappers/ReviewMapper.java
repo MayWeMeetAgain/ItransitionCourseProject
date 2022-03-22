@@ -30,6 +30,7 @@ public class ReviewMapper {
                 .addMappings(m -> m.skip(ReviewDto::setLikes))
                 .addMappings(m -> m.skip(ReviewDto::setLiked))
                 .addMappings(m-> m.skip(ReviewDto::setAuthorName))
+                .addMappings(m -> m.skip(ReviewDto::setReadOnlyMode))
                 .setPostConverter(toDtoConverter());
         modelMapper.createTypeMap(ReviewDto.class, Review.class)
                 .addMappings(m -> m.skip(Review::setLikes))
@@ -66,16 +67,18 @@ public class ReviewMapper {
     private void mapSpecificFields(Review source, ReviewDto destination) {
         destination.setLikes(source.getLikes().size());
         destination.setAuthorName(source.getAuthor().getUsername());
-        mapLikedField(source, destination);
+        mapCurrentUserFields(source, destination);
     }
 
-    private void mapLikedField(Review source, ReviewDto destination) {
+    private void mapCurrentUserFields(Review source, ReviewDto destination) {
         try {
         User currentUser = userRepository.findByUsername(((UserDetails) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal()).getUsername());
             destination.setLiked(source.getLikes().contains(currentUser));
+            destination.setReadOnlyMode(!source.getAuthor().equals(currentUser));
         } catch (Exception e) {
             destination.setLiked(false);
+            destination.setReadOnlyMode(true);
         }
     }
 

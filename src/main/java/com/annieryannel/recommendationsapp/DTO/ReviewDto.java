@@ -14,5 +14,5 @@ public class ReviewDto {
     private String authorName;
     private Integer likes;
     private boolean liked;
-    //private boolean isReadOnlyMode;
+    private boolean isReadOnlyMode;
 }

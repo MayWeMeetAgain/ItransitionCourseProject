@@ -1,23 +1,26 @@
-<div th:fragment="card">
-    <div class="card bg-light" style="width: 15rem;">
-        <img src="/images/frog.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">
-                <strong th:text="#{review.title}"></strong>
-                <span th:text="${review.title}"></span>
-            </h5>
-            <div class="card-text">
-                <span th:text="#{review.author}"></span>
-                <a th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
+<div th:fragment="card" th:each="review : ${cards}" th:id="'card' + ${review.id}" class="card shadow bg-dark m-2 text-secondary " style="width: 19rem;">
+    <img src="/images/frog.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title text-center">
+            <strong th:text="#{review.title}"></strong>
+            <span th:text="${review.title}"></span>
+        </h5>
+        <div class="card-text text-start">
+            <span th:text="#{review.author}"></span>
+            <a class="link-warning link-capacity-50" th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
+        </div>
+        </div>
+        <div class="row my-2 mx-1 text-start">
+            <div class="card-buttons text-center btn-group btn-group-sm col" role="group" aria-label="Basic outlined example">
+                <a th:href="'/reviews/'+${review.id}" class="btn btn-outline-warning" th:text="#{button.read}"></a>
+                <a th:if="${!review.isReadOnlyMode}" th:href="'/reviews/edit/'+${review.id}" class="btn btn-outline-warning" th:text="#{button.edit}"></a>
+                <a th:if="${!review.isReadOnlyMode}" th:onclick="'javascript:deleteReview(\''+${review.id}+'\');'" class="btn btn-outline-danger" th:text="#{button.delete}"></a>
             </div>
-            <div class="card-likes">
-                <button class="btn btn-light btn-sm" type="button" th:onclick="'javascript:likeAction(\''+${review.id}+'\');'">
+            <div class="card-likes col text-end">
+                <button class="btn btn-dark btn-sm text-danger" type="button" th:onclick="'javascript:likeAction(\''+${review.id}+'\');'">
                     <i th:id="'like-button' + ${review.id}" th:class="${review.liked} ? 'fa-heart fa-solid' : 'fa-heart fa-regular'"></i>
                     <span th:id="'likes-amount' + ${review.id}" th:text="${review.likes}"></span>
                 </button>
-            </div>
-            <div class="card-buttons text-center">
-                <a th:href="'/reviews/'+${review.id}" class="btn btn-primary">Read</a>
             </div>
         </div>
     </div>
