@@ -34,8 +34,9 @@ public class Review {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "user_id")
-    private Long authorId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
 
     @ManyToMany
     @JoinTable (

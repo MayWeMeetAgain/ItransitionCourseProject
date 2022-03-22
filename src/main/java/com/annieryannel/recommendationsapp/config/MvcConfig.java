@@ -1,5 +1,7 @@
 package com.annieryannel.recommendationsapp.config;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.Locale;
+
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 
 @Configuration
@@ -50,5 +54,16 @@ public class MvcConfig implements WebMvcConfigurer {
         resolver.setDefaultLocale(Locale.ENGLISH);
         resolver.setCookieName("localeInfo");
         return resolver;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE);
+        return mapper;
     }
 }

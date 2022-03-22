@@ -1,14 +1,12 @@
 package com.annieryannel.recommendationsapp.controllers;
 
-import com.annieryannel.recommendationsapp.DTO.CardDTO;
+import com.annieryannel.recommendationsapp.DTO.ReviewDto;
 import com.annieryannel.recommendationsapp.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,8 +16,8 @@ public class ReviewsController {
     ReviewService reviewService;
 
     @GetMapping("/reviews/getAll")
-    public List<CardDTO> getAllCards() {
-        return reviewService.loadAllCards();
+    public List<ReviewDto> getAllCards() {
+        return reviewService.loadAll();
     }
 
     @PreAuthorize("isAuthenticated()")

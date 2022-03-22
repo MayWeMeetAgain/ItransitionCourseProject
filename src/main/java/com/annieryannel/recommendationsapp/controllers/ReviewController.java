@@ -1,6 +1,6 @@
 package com.annieryannel.recommendationsapp.controllers;
 
-import com.annieryannel.recommendationsapp.DTO.CardDTO;
+import com.annieryannel.recommendationsapp.DTO.ReviewDto;
 import com.annieryannel.recommendationsapp.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 @Controller
 public class ReviewController {
 
@@ -20,7 +18,7 @@ public class ReviewController {
 
     @GetMapping("/reviews/{reviewId}")
     public String showReview(@PathVariable("reviewId") Long reviewId, Model model) {
-        model.addAttribute("review", reviewService.loadReviewById(reviewId));
+        model.addAttribute("review", reviewService.loadById(reviewId));
         return "review";
     }
 
@@ -30,9 +28,9 @@ public class ReviewController {
     }
 
     @PostMapping("/addReview")
-    public String addCard(CardDTO dto, Authentication authentication) {
+    public String addCard(ReviewDto dto, Authentication authentication) {
         dto.setAuthorName(authentication.getName());
-        reviewService.saveCard(dto);
+        reviewService.saveReview(dto);
 
         return "addreview";
     }

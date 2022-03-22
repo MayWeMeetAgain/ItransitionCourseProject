@@ -25,7 +25,7 @@ public class UserPageController {
     public String showProfile(@PathVariable("username") String username, Model model) {
         User user = userService.getUserByUsername(username);
         model.addAttribute("user", user);
-        model.addAttribute("reviews", reviewService.loadAllCardsByUserId(user.getId()));
+        model.addAttribute("reviews", reviewService.loadAllByUserId(user.getId()));
         model.addAttribute("likes", userService.countLikes(user));
         return "userpage";
     }

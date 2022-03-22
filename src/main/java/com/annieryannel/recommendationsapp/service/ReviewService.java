@@ -1,12 +1,10 @@
 package com.annieryannel.recommendationsapp.service;
 
-import com.annieryannel.recommendationsapp.DTO.CardDTO;
+import com.annieryannel.recommendationsapp.DTO.ReviewDto;
+import com.annieryannel.recommendationsapp.mappers.ReviewMapper;
 import com.annieryannel.recommendationsapp.models.Review;
 import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
-import com.annieryannel.recommendationsapp.repositories.SearchRepository;
-import com.annieryannel.recommendationsapp.repositories.UserRepository;
-import com.annieryannel.recommendationsapp.repositories.impl.SearchRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,69 +23,32 @@ public class ReviewService {
     @Autowired
     ReviewRepository reviewRepository;
 
-    public List<Review> loadAllReviews() {
-        return reviewRepository.findAll();
+    @Autowired
+    ReviewMapper reviewMapper;
+
+    public List<ReviewDto> loadAll() {
+        return reviewRepository.findAll().stream().map(review -> reviewMapper.toDto(review))
+                .collect(Collectors.toList());
     }
 
-    public Review loadReviewById(Long id) {
-        return reviewRepository.findById(id).get();
+    public ReviewDto loadById(Long id) {
+        return reviewMapper.toDto(reviewRepository.findById(id).get());
     }
 
-    public List<Review> loadAllByUserId(Long userId) {
-        return reviewRepository.findAllByAuthorId(userId);
+    public List<ReviewDto> loadAllByUserId(Long userId) {
+        return reviewRepository.findAllByAuthorId(userId).stream().map(review -> reviewMapper.toDto(review))
+                .collect(Collectors.toList());
     }
 
-    public List<CardDTO> loadAllCardsByUserId(Long userId) {
-        List<Review> reviews = loadAllByUserId(userId);
-        List<CardDTO> cards = new ArrayList<>();
-        for (Review review : reviews)
-            cards.add(makeDto(review));
-        return cards;
-    }
-
-    public CardDTO makeDto(Review review) {
-        CardDTO card = new CardDTO();
-        card.setReviewId(review.getId());
-        card.setTitle(review.getTitle());
-        card.setAuthorName(userService.getUsernameById(review.getAuthorId()));
-        card.setLikes((long) review.getLikes().size());
-        try {
-            card.setLiked(review.getLikes().contains(userService.getCurrentUser()));
-        } catch (Exception e) {
-            card.setLiked(false);
-        }
-        card.setText(review.getText());
-        //card.setReadOnlyMode(userService.getCurrentUser().getId() == review.getAuthorId());
-        return card;
-    }
-
-
-    public List<CardDTO> loadAllCards() {
-        List<Review> reviews = loadAllReviews();
-        return reviews.stream().map(this::makeDto).collect(Collectors.toList());
-    }
-
-    public void saveReview(Review review) {
-        reviewRepository.save(review);
-    }
-
-    public Review createReviewFromDto(CardDTO dto) {
-        Review review = new Review();
-        review.setAuthorId(userService.getUserByUsername(dto.getAuthorName()).getId());
-        review.setTitle(dto.getTitle());
-        review.setText(dto.getText());
-        return review;
-    }
-
-    public void saveCard(CardDTO dto) {
-        saveReview(createReviewFromDto(dto));
+    public void saveReview(ReviewDto reviewDto) {
+        reviewRepository.save(reviewMapper.toEntity(reviewDto));
     }
 
     public Integer likeReview(Long reviewId, String username) {
         User user = userService.getUserByUsername(username);
         Review review = reviewRepository.getById(reviewId);
         review.addLike(user);
-        saveReview(review);
+        reviewRepository.save(review);
         return review.getLikes().size();
     }
 
@@ -95,12 +56,12 @@ public class ReviewService {
         User user = userService.getUserByUsername(username);
         Review review = reviewRepository.getById(reviewId);
         review.removeLike(user);
-        saveReview(review);
+        reviewRepository.save(review);
         return review.getLikes().size();
     }
 
-    public List<CardDTO> search(String text) {
+    public List<ReviewDto> search(String text) {
         List<Review> reviews = reviewRepository.search(text);
-        return reviews.stream().map(this::makeDto).collect(Collectors.toList());
+        return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
     }
 }

@@ -2,9 +2,7 @@ package com.annieryannel.recommendationsapp.controllers;
 
 import java.util.List;
 
-import com.annieryannel.recommendationsapp.DTO.CardDTO;
-import com.annieryannel.recommendationsapp.models.Review;
-import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
+import com.annieryannel.recommendationsapp.DTO.ReviewDto;
 import com.annieryannel.recommendationsapp.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +20,7 @@ public class SearchController {
 
     @RequestMapping(value = "/search")
     public String search(@RequestParam(value = "search", required = false) String text, Model model) {
-        List<CardDTO> searchResults = null;
+        List<ReviewDto> searchResults = null;
         try {
             searchResults = reviewService.search(text);
 

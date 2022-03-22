@@ -1,20 +1,18 @@
 package com.annieryannel.recommendationsapp.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardDTO {
-    private Long reviewId;
+public class ReviewDto {
+    private Long id;
     private String title;
-    private String authorName;
     private String text;
-    private Long likes;
+    private String authorName;
+    private Integer likes;
     private boolean liked;
     //private boolean isReadOnlyMode;
 }

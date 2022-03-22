@@ -11,13 +11,13 @@
                 <a th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
             </div>
             <div class="card-likes">
-                <button class="btn btn-light btn-sm" type="button" th:onclick="'javascript:likeAction(\''+${review.reviewId}+'\');'">
-                    <i th:id="'like-button' + ${review.reviewId}" th:class="${review.liked} ? 'fa-heart fa-solid' : 'fa-heart fa-regular'"></i>
-                    <span th:id="'likes-amount' + ${review.reviewId}" th:text="${review.likes}"></span>
+                <button class="btn btn-light btn-sm" type="button" th:onclick="'javascript:likeAction(\''+${review.id}+'\');'">
+                    <i th:id="'like-button' + ${review.id}" th:class="${review.liked} ? 'fa-heart fa-solid' : 'fa-heart fa-regular'"></i>
+                    <span th:id="'likes-amount' + ${review.id}" th:text="${review.likes}"></span>
                 </button>
             </div>
             <div class="card-buttons text-center">
-                <a th:href="'/reviews/'+${review.reviewId}" class="btn btn-primary">Read</a>
+                <a th:href="'/reviews/'+${review.id}" class="btn btn-primary">Read</a>
             </div>
         </div>
     </div>

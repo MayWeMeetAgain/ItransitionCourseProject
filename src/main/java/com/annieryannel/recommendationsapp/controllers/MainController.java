@@ -17,7 +17,7 @@ public class MainController {
 
     @GetMapping("/")
     public String userAction(Model model) {
-        model.addAttribute("cards", reviewService.loadAllCards());
+        model.addAttribute("cards", reviewService.loadAll());
         //model.addAttribute("reviews", reviewService.loadAllReviews());
         return "home";
     }
