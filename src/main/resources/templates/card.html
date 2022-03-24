@@ -2,12 +2,17 @@
     <img src="/images/frog.jpg" class="card-img-top" alt="...">
     <div class="card-body">
         <h5 class="card-title text-center">
-            <strong th:text="#{review.title}"></strong>
             <span th:text="${review.title}"></span>
         </h5>
         <div class="card-text text-start">
-            <span th:text="#{review.author}"></span>
+            <div>
+            <span th:text="#{review.author} + ':'"></span>
             <a class="link-warning link-capacity-50" th:href="'/user/' + ${review.authorName}" th:text="${review.authorName}"></a>
+            </div>
+            <div>
+                <span th:text="#{review.category} + ':'"></span>
+                <span style="text-transform: lowercase;" th:text="${review.category}"></span>
+            </div>
         </div>
         </div>
         <div class="row my-2 mx-1 text-start">

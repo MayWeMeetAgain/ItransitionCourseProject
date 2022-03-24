@@ -1,5 +1,6 @@
 package com.annieryannel.recommendationsapp.models;
 
+import com.annieryannel.recommendationsapp.utils.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,6 +38,10 @@ public class Review {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
+
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ManyToMany
     @JoinTable (

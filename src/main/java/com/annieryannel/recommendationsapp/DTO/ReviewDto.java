@@ -1,5 +1,6 @@
 package com.annieryannel.recommendationsapp.DTO;
 
+import com.annieryannel.recommendationsapp.utils.Category;
 import lombok.*;
 
 @Getter
@@ -12,6 +13,7 @@ public class ReviewDto {
     private String title;
     private String text;
     private String authorName;
+    private Category category;
     private Integer likes;
     private boolean liked;
     private boolean isReadOnlyMode;
