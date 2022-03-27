@@ -1,13 +1,10 @@
-<div th:fragment="rating" class="rating">
-    <div class="rating-bar">
-        <div class="rating-items">
-            <input type="radio" class="rating-item" value="1" name="rating"/>
-            <input type="radio" class="rating-item" value="2" name="rating"/>
-            <input type="radio" class="rating-item" value="3" name="rating"/>
-            <input type="radio" class="rating-item" value="4" name="rating"/>
-            <input type="radio" class="rating-item" value="5" name="rating"/>
-        </div>
+<div th:fragment="rating"  >
+    <div id="stars" class="wrap_input">
+        <span th:onclick="|rate(5, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span th:onclick="|rate(4, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span th:onclick="|rate(3, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span th:onclick="|rate(2, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span th:onclick="|rate(1, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
     </div>
-    <div class="rating-value">
-    </div>
+    <script src="js/rate.js"></script>
 </div>

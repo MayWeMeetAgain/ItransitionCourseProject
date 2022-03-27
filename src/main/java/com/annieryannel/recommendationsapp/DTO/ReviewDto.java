@@ -12,8 +12,10 @@ public class ReviewDto {
     private Long id;
     private String title;
     private String text;
-    private String authorName;
+    private UserDto author;
     private Category category;
+    private Float usersRating;
+    private boolean isRated;
     private Integer likes;
     private boolean liked;
     private boolean isReadOnlyMode;

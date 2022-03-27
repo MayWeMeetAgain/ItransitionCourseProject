@@ -1,0 +1,13 @@
+<div th:fragment="review-title">
+    <h5 class="card-title text-center">
+        <span th:text="${review.title}"></span><sup class="text-warning"><span th:text="${#numbers.formatDecimal(review.usersRating, 0, 2)}"></span><i class="fa-solid fa-star"></i></sup>
+    </h5>
+</div>
+
+<div th:fragment="review-author">
+    <span th:text="#{review.author} + ':'"></span>
+    <span>
+        <a class="link-warning link-capacity-50" th:href="'/user/' + *{username}" th:text="*{username}"></a>
+        <sup><span th:text="*{likes}"></span><i class="fa-solid fa-heart"></i></sup>
+    </span>
+</div>

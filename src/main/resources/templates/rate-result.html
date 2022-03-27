@@ -1,0 +1,14 @@
+<div th:fragment="rate-result">
+    <div id="stars" class="wrap_input">
+        <span><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span th:text="${#numbers.formatDecimal(review.usersRating, 0, 2)}"></span>
+    </div>
+    <script th:inline="javascript">
+        showRating([[${review.usersRating}]], [[${review.id}]]);
+    </script>
+    <script src="js/rate.js"></script>
+</div>

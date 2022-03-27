@@ -22,6 +22,9 @@ public class ReviewMapper {
     ModelMapper modelMapper;
 
     @Autowired
+    UserMapper userMapper;
+
+    @Autowired
     UserRepository userRepository;
 
     @PostConstruct
@@ -29,8 +32,9 @@ public class ReviewMapper {
         modelMapper.createTypeMap(Review.class, ReviewDto.class)
                 .addMappings(m -> m.skip(ReviewDto::setLikes))
                 .addMappings(m -> m.skip(ReviewDto::setLiked))
-                .addMappings(m-> m.skip(ReviewDto::setAuthorName))
+                .addMappings(m-> m.skip(ReviewDto::setAuthor))
                 .addMappings(m -> m.skip(ReviewDto::setReadOnlyMode))
+                .addMappings(m->m.skip(ReviewDto::setRated))
                 .setPostConverter(toDtoConverter());
         modelMapper.createTypeMap(ReviewDto.class, Review.class)
                 .addMappings(m -> m.skip(Review::setLikes))
@@ -66,7 +70,7 @@ public class ReviewMapper {
 
     private void mapSpecificFields(Review source, ReviewDto destination) {
         destination.setLikes(source.getLikes().size());
-        destination.setAuthorName(source.getAuthor().getUsername());
+        destination.setAuthor(userMapper.toDto(source.getAuthor()));
         mapCurrentUserFields(source, destination);
     }
 
@@ -76,13 +80,15 @@ public class ReviewMapper {
                 .getContext().getAuthentication().getPrincipal()).getUsername());
             destination.setLiked(source.getLikes().contains(currentUser));
             destination.setReadOnlyMode(!source.getAuthor().equals(currentUser));
+            destination.setRated(source.getRaters().contains(currentUser));
         } catch (Exception e) {
             destination.setLiked(false);
             destination.setReadOnlyMode(true);
+            destination.setRated(false);
         }
     }
 
     private void mapSpecificFields(ReviewDto source, Review destination) {
-        destination.setAuthor(userRepository.findByUsername(source.getAuthorName()));
+        destination.setAuthor(userMapper.toEntity(source.getAuthor()));
     }
 }

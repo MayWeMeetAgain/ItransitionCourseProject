@@ -7,7 +7,7 @@
                     <li><a class="btn btn-warning mx-2" th:href="@{/addReview}" th:text="#{button.add}"></a></li>
                 </ul>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" th:action="@{/search}">
-                    <input type="search" name="search" id="search" class="form-control form-control-dark bg-dark text-secondary" placeholder="Search..." aria-label="Search">
+                    <input type="search" name="search" id="search" class="form-control form-control-dark bg-dark text-secondary" th:placeholder="#{search} + '...'" aria-label="Search">
                 </form>
                 <div class="lang-switcher m-2">
                     <a href="/?lang=en">eng</a>

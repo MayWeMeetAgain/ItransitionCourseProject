@@ -1,0 +1,125 @@
+/*.stars {*/
+/*    position: relative;*/
+/*    list-style: none;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    width: 100px;*/
+/*    height: 20px;*/
+/*}*/
+
+/*.star::before {*/
+/*    content: "★★★★★";*/
+/*    display: block;*/
+/*}*/
+
+.wrap_input{
+    display: flex;
+    flex-flow: row-reverse;
+}
+
+/*.star {*/
+/*    float: right; !* обтекание по правой стороне как раз необходимо для выстравания элементов  в обратном порядке *!*/
+/*    !*text-indent: -9999px; !* скрываем текст *!*!*/
+/*    cursor: pointer;*/
+/*}*/
+
+.star:hover i i,
+.star:hover ~ .star i i {
+    width: 100%;
+}
+
+/*.active-stars {*/
+/*    width: 60%;*/
+/*    height: 100%;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.active-stars::before {*/
+/*    content: "★★★★★";*/
+/*    width: 100px;*/
+/*    height: 100%;*/
+/*    color: darkorange;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+
+/*.rating {*/
+/*    display: flex;*/
+/*    align-items: flex-end;*/
+/*    font-size: 40px;*/
+/*    line-height: 0.75;*/
+/*}*/
+
+/*.rating-body {*/
+/*    position: relative;*/
+/*}*/
+
+/*.rating-body::before {*/
+/*    content: "★★★★★";*/
+/*    display: block;*/
+/*}*/
+
+/*.rating-active {*/
+/*    position: absolute;*/
+/*    width: 30%;*/
+/*    height: 100%;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    overflow: hidden;*/
+/*}*/
+
+/*.rating-active::before {*/
+/*    content: "★★★★★";*/
+/*    position: absolute;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    color: gold;*/
+/*}*/
+
+/*.rating-items {*/
+/*    display: flex;*/
+/*    position: absolute;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*}*/
+
+/*.rating-item {*/
+/*    flex: 0 0 20%;*/
+/*    height: 100%;*/
+/*    opacity: 0;*/
+/*}*/
+
+/*.rating-value {*/
+/*    font-size: 50%;*/
+/*    line-height: 1;*/
+/*    padding: 0 0 0 10px;*/
+/*}*/
+
+.stars__out {
+    position: relative;
+    margin-right: 2px; /* сделаем отступ между зведами */
+    color: grey;
+    z-index: 1;
+}
+.stars__in {
+    /* разместим ка мы нашу заливку как дочернюю основной иконки и кинем поверх */
+    position: absolute;
+    z-index: 2;
+
+    color: orange; /* дадим солнечного цвета */
+    font-size: inherit; /* и шрифту размер родителя */
+
+    /* блоку дадим точки отчета по нулям относительно родителя */
+    display: block;
+    top: 0; bottom: 0;
+
+    /* ну и ограничим область видимости, а также ширину установим в 0 по умолчанию   */
+    overflow: hidden;
+    width: 0;
+}

@@ -8,10 +8,17 @@ import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.RequestEntity.post;
+import static org.springframework.http.RequestEntity.put;
 
 @Service
 @Transactional
@@ -40,8 +47,10 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    public void saveReview(ReviewDto reviewDto) {
-        reviewRepository.save(reviewMapper.toEntity(reviewDto));
+    public void saveReview(ReviewDto reviewDto, String authorName) {
+        Review review = reviewMapper.toEntity(reviewDto);
+        review.setAuthor(userService.getUserByUsername(authorName));
+        reviewRepository.save(review);
     }
 
     public Integer likeReview(Long reviewId, String username) {
@@ -58,6 +67,20 @@ public class ReviewService {
         review.removeLike(user);
         reviewRepository.save(review);
         return review.getLikes().size();
+    }
+
+    public Float rateReview(Integer rate, Long reviewId, String username) {
+        User user = userService.getUserByUsername(username);
+        Review review = reviewRepository.getById(reviewId);
+        Set<User> raters = review.getRaters();
+        Float userRating = review.getUsersRating();
+        if (raters.contains(user))
+            return userRating;
+        review.setUsersRating((userRating * raters.size() + rate) / (raters.size() + 1));
+
+        review.addRater(user);
+        reviewRepository.save(review);
+        return review.getUsersRating();
     }
 
     public List<ReviewDto> search(String text) {
