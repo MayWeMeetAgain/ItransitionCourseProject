@@ -5,6 +5,10 @@
         <span th:onclick="|rate(3, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
         <span th:onclick="|rate(2, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
         <span th:onclick="|rate(1, '${review.id}')|" class="star"><i class="fa-regular fa-star stars__out"><i class="fa-solid fa-star stars__in"></i></i></span>
+        <span class="rating-number" th:text="${#numbers.formatDecimal(review.usersRating, 0, 2)}"></span>
     </div>
-    <script src="js/rate.js"></script>
+    <script src="/js/rate.js"></script>
+    <script th:if="${review.isRated}" th:inline="javascript">
+        showRating([[${review.usersRating}]], [[${review.id}]]);
+    </script>
 </div>

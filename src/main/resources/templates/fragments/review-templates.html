@@ -1,6 +1,6 @@
 <div th:fragment="review-title">
     <h5 class="card-title text-center">
-        <span th:text="${review.title}"></span><sup class="text-warning"><span th:text="${#numbers.formatDecimal(review.usersRating, 0, 2)}"></span><i class="fa-solid fa-star"></i></sup>
+        <span th:text="${review.title}"></span><sup class="text-warning"><span class="title-rating" th:text="${#numbers.formatDecimal(review.usersRating, 0, 2)}"></span><i class="fa-solid fa-star"></i></sup>
     </h5>
 </div>
 

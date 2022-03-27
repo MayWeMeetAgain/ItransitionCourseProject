@@ -1,22 +1,23 @@
 <div th:fragment="card" th:each="review : ${cards}" th:id="'card' + ${review.id}" class="card shadow bg-dark m-2 text-secondary " style="width: 19rem;">
     <img src="/images/frog.jpg" class="card-img-top" alt="...">
     <div class="card-body">
-        <div th:insert="review-templates :: review-title"></div>
+        <div th:insert="fragments/review-templates :: review-title"></div>
         <div class="card-text text-start">
-            <div th:object="${review.author}" th:insert="review-templates :: review-author">
+            <div th:object="${review.author}" th:insert="fragments/review-templates :: review-author">
             </div>
             <div>
                 <span th:text="#{review.category} + ':'"></span>
                 <span style="text-transform: lowercase;" th:text="${review.category}"></span>
             </div>
-            <div th:if="${review.isRated}" th:insert="rate-result :: rate-result"></div>
-            <div th:unless="${review.isRated}" th:insert="rating :: rating"></div>
+            <div class="rating" th:insert="fragments/rating :: rating"></div>
+<!--            <div class="rating" th:if="${review.isRated}" th:insert="fragments/rate-result :: rate-result"></div>-->
+<!--            <div class="rating" th:unless="${review.isRated}" th:insert="fragments/rating :: rating"></div>-->
         </div>
         </div>
         <div class="row my-2 mx-1 text-start">
             <div class="card-buttons text-center btn-group btn-group-sm col" role="group" aria-label="Basic outlined example">
                 <a th:href="'/reviews/'+${review.id}" class="btn btn-outline-warning" th:text="#{button.read}"></a>
-                <a th:if="${!review.isReadOnlyMode}" th:href="'/reviews/edit/'+${review.id}" class="btn btn-outline-warning" th:text="#{button.edit}"></a>
+                <a th:if="${!review.isReadOnlyMode}" th:href="'/review/edit/'+${review.id}" class="btn btn-outline-warning" th:text="#{button.edit}"></a>
                 <a th:if="${!review.isReadOnlyMode}" th:onclick="'javascript:deleteReview(\''+${review.id}+'\');'" class="btn btn-outline-danger" th:text="#{button.delete}"></a>
             </div>
             <div class="card-likes col text-end">
