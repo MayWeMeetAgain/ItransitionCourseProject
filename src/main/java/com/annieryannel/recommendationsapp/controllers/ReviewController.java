@@ -20,8 +20,8 @@ public class ReviewController {
     @Autowired
     ReviewService reviewService;
 
-    @Autowired
-    FirebaseStorageStrategy storageStrategy;
+//    @Autowired
+//    FirebaseStorageStrategy storageStrategy;
 
     @GetMapping("/reviews/{reviewId}")
     public String showReview(@PathVariable("reviewId") Long reviewId, Model model) {
@@ -36,7 +36,7 @@ public class ReviewController {
 
     @PostMapping("/addReview")
     public String addCard(ReviewDto dto, @RequestParam("file") MultipartFile file, Authentication authentication) throws IOException {
-        storageStrategy.uploadFile(file);
+//        storageStrategy.uploadFile(file);
 
         reviewService.saveReview(dto, authentication.getName());
         return "addreview";
