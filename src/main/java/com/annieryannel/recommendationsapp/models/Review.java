@@ -43,6 +43,17 @@ public class Review {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(name = "users_rating")
+    private Float usersRating;
+
+    @ManyToMany
+    @JoinTable (
+            name = "review_rates",
+            joinColumns = { @JoinColumn(name = "review_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
+    )
+    private Set<User> raters = new HashSet<>();
+
     @ManyToMany
     @JoinTable (
             name = "review_likes",
@@ -54,6 +65,8 @@ public class Review {
     public void addLike(User user) {
         likes.add(user);
     }
+
+    public void addRater(User user) {raters.add(user);}
 
     public void removeLike(User user) {likes.remove(user);}
 }
