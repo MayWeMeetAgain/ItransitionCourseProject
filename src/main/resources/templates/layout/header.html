@@ -25,6 +25,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" th:href="@{'/user/' + ${#authentication.name}}" th:text="#{menu.my_page}"></a></li>
+                            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="dropdown-item" th:href="@{/admin}" th:text="#{menu.admin_page}"></a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li><form  th:action="@{/logout}" method="post">
                                 <input class="dropdown-item" type="submit" th:value="#{menu.log_out}">
