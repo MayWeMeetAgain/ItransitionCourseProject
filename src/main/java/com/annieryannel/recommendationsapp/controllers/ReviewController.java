@@ -1,9 +1,7 @@
 package com.annieryannel.recommendationsapp.controllers;
 
 import com.annieryannel.recommendationsapp.DTO.ReviewDto;
-import com.annieryannel.recommendationsapp.service.FirebaseStorageStrategy;
 import com.annieryannel.recommendationsapp.service.ReviewService;
-import com.annieryannel.recommendationsapp.service.StorageStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
