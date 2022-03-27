@@ -1,8 +1,11 @@
 package com.annieryannel.recommendationsapp.service;
 
+import com.annieryannel.recommendationsapp.DTO.UserDto;
+import com.annieryannel.recommendationsapp.mappers.UserMapper;
 import com.annieryannel.recommendationsapp.models.Review;
 import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
+import com.annieryannel.recommendationsapp.repositories.RoleRepository;
 import com.annieryannel.recommendationsapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +22,13 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    RoleRepository roleRepository;
+
     @Autowired
     ReviewRepository reviewRepository;
 
@@ -41,7 +51,7 @@ public class UserService implements UserDetailsService {
     }
 
     private User setRegistrationParams(User user) {
-//        user.addRole(roleRepository.findByRole(Roles.ROLE_USER.getAuthority()));
+        user.addRole(roleRepository.findByRole("ROLE_USER"));
 //        user.addRole(roleRepository.findByRole(Roles.ROLE_ACTIVE.getAuthority()));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         //user.setRegistrationDate(new Date());
@@ -52,6 +62,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getById(userId).getUsername();
     }
 
+    public UserDto getUserDtoByUsername(String username) {
+        return userMapper.toDto(userRepository.findByUsername(username));
+    }
+
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -59,7 +73,7 @@ public class UserService implements UserDetailsService {
     public User getCurrentUser(){
         String username = ((UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal()).getUsername();
-        return getUserByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     public Long countLikes(User user) {
@@ -68,5 +82,9 @@ public class UserService implements UserDetailsService {
         for (Review review : reviews)
             count += review.getLikes().size();
         return count;
+    }
+
+    public List<User> loadAllUsers() {
+        return userRepository.findAll();
     }
 }

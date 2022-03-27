@@ -1,11 +1,15 @@
 package com.annieryannel.recommendationsapp.service;
 
 import com.annieryannel.recommendationsapp.DTO.ReviewDto;
+import com.annieryannel.recommendationsapp.DTO.UserDto;
 import com.annieryannel.recommendationsapp.mappers.ReviewMapper;
 import com.annieryannel.recommendationsapp.models.Review;
+import com.annieryannel.recommendationsapp.models.Role;
 import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
+import com.annieryannel.recommendationsapp.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +35,9 @@ public class ReviewService {
     ReviewRepository reviewRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     ReviewMapper reviewMapper;
 
     public List<ReviewDto> loadAll() {
@@ -47,7 +54,23 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    public void saveReview(ReviewDto reviewDto, String authorName) {
+    public ReviewDto readById(Long id) {
+        ReviewDto dto = loadById(id);
+        dto.setText(MarkdownService.markdownToHTML(dto.getText()));
+        return dto;
+    }
+
+    public void saveReview(ReviewDto reviewDto) {
+        Review review = reviewRepository.getById(reviewDto.getId());
+        review.setText(reviewDto.getText());
+        review.setTitle(reviewDto.getTitle());
+        review.setCategory(reviewDto.getCategory());
+        reviewRepository.save(review);
+    }
+
+    public void addReview(ReviewDto reviewDto, String authorName) {
+        UserDto userDto = userService.getUserDtoByUsername(authorName);
+        reviewDto.setAuthor(userDto);
         Review review = reviewMapper.toEntity(reviewDto);
         review.setAuthor(userService.getUserByUsername(authorName));
         reviewRepository.save(review);
@@ -88,7 +111,16 @@ public class ReviewService {
         return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
     }
 
-    public void deleteReviewById(Long reviewId) {
-        reviewRepository.deleteById(reviewId);
+    public void deleteReviewById(Long reviewId, Authentication authentication) {
+        Role admin = roleRepository.findByRole("ROLE_ADMIN");
+        Review review = reviewRepository.getById(reviewId);
+        if (authentication.getAuthorities().contains(admin) || authentication.getName().equals(review.getAuthor().getUsername()) )
+            reviewRepository.deleteById(reviewId);
+    }
+
+    public List<ReviewDto> getReviewsByUsername(String username) {
+        Long id = userService.getUserByUsername(username).getId();
+        List<Review> reviews = reviewRepository.findAllByAuthorId(id);
+        return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
     }
 }

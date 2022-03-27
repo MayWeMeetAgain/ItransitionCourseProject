@@ -1,5 +1,6 @@
 package com.annieryannel.recommendationsapp.controllers;
 
+import com.annieryannel.recommendationsapp.DTO.UserDto;
 import com.annieryannel.recommendationsapp.models.Review;
 import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.service.ReviewService;
@@ -23,10 +24,9 @@ public class UserPageController {
 
     @GetMapping("/user/{username}")
     public String showProfile(@PathVariable("username") String username, Model model) {
-        User user = userService.getUserByUsername(username);
-        model.addAttribute("user", user);
-        model.addAttribute("cards", reviewService.loadAllByUserId(user.getId()));
-        model.addAttribute("likes", userService.countLikes(user));
+        UserDto userDto = userService.getUserDtoByUsername(username);
+        model.addAttribute("user", userDto);
+        model.addAttribute("cards", reviewService.getReviewsByUsername(username));
         return "userpage";
     }
 }

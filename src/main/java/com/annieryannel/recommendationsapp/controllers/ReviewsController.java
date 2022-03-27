@@ -40,7 +40,7 @@ public class ReviewsController {
     }
 
     @DeleteMapping("/review/delete/{reviewId}")
-    public void showReview(@PathVariable("reviewId") Long reviewId) {
-        reviewService.deleteReviewById(reviewId);
+    public void deleteReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
+        reviewService.deleteReviewById(reviewId, authentication);
     }
 }
