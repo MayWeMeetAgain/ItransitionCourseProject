@@ -34,7 +34,7 @@ public class RegistrationController {
         boolean isUserExist = !userService.saveUser(userForm);
         model.addAttribute("passwordError" , !isPasswordMatch);
         model.addAttribute("usernameError", isUserExist);
-        if (!isPasswordMatch || isUserExist) {
+        if (!isPasswordMatch || isUserExist || bindingResult.hasErrors()) {
             return "registration";
         }
         model.addAttribute("registered", true);

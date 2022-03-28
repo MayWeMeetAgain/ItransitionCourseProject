@@ -6,12 +6,6 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <div sec:authorize="isAuthenticated()">
-            <div>
-                <span th:text="#{greeting}"></span>
-                <span sec:authentication="name"></span>
-            </div>
-        </div>
         <div class="text-center" style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;" id="cards_list" th:insert="fragments/card :: card">
         </div>
     </div>

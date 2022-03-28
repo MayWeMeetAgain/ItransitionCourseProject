@@ -8,7 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -37,7 +40,7 @@ public class ReviewController {
     }
 
     @PostMapping("/review/edit/{reviewId}")
-    public String saveEditedReview(@PathVariable("reviewId") Long reviewId, @ModelAttribute("review") ReviewDto dto, Authentication authentication) {
+    public String saveEditedReview(@PathVariable("reviewId") Long reviewId, @ModelAttribute("review") @Valid ReviewDto dto, BindingResult bindingResult, Authentication authentication) {
         dto.setId(reviewId);
         reviewService.saveReview(dto, authentication);
         return "redirect:/";
@@ -51,7 +54,7 @@ public class ReviewController {
     }
 
     @PostMapping("/review/add")
-    public String saveAddedReview(@ModelAttribute("review") ReviewDto dto, Authentication authentication) {
+    public String saveAddedReview(@ModelAttribute("review") @Valid ReviewDto dto, BindingResult bindingResult, Authentication authentication) {
         reviewService.addReview(dto, authentication.getName());
         return "redirect:/";
     }
