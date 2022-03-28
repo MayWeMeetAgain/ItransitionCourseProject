@@ -7,13 +7,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class AdminController {
+public class AdminPageController {
+
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
+    public AdminPageController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/admin")
-    public String home_base(Model model) {
+    public String showAdminPage(Model model) {
         model.addAttribute("users", userService.loadAllUsers());
         return "admin";
     }

@@ -15,21 +15,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SearchController {
 
+    private final ReviewService reviewService;
+
     @Autowired
-    private ReviewService reviewService;
+    public SearchController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
     @RequestMapping(value = "/search")
     public String search(@RequestParam(value = "search", required = false) String text, Model model) {
-        List<ReviewDto> searchResults = null;
-        try {
-            searchResults = reviewService.search(text);
-
-        } catch (Exception ex) {
-            // Nothing
-        }
+        List<ReviewDto> searchResults = reviewService.search(text);
         model.addAttribute("cards", searchResults);
         return "searchresults";
-
     }
 
 }

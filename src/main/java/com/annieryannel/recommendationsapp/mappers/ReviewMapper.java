@@ -18,27 +18,32 @@ import java.util.Objects;
 @Component
 public class ReviewMapper {
 
-    @Autowired
-    ModelMapper modelMapper;
+    final ModelMapper modelMapper;
+
+    final UserMapper userMapper;
+
+    final UserRepository userRepository;
 
     @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    UserRepository userRepository;
+    public ReviewMapper(ModelMapper modelMapper, UserMapper userMapper, UserRepository userRepository) {
+        this.modelMapper = modelMapper;
+        this.userMapper = userMapper;
+        this.userRepository = userRepository;
+    }
 
     @PostConstruct
     public void setupMapper() {
         modelMapper.createTypeMap(Review.class, ReviewDto.class)
                 .addMappings(m -> m.skip(ReviewDto::setLikes))
                 .addMappings(m -> m.skip(ReviewDto::setLiked))
-                .addMappings(m-> m.skip(ReviewDto::setAuthor))
+                .addMappings(m -> m.skip(ReviewDto::setAuthor))
                 .addMappings(m -> m.skip(ReviewDto::setReadOnlyMode))
-                .addMappings(m->m.skip(ReviewDto::setRated))
+                .addMappings(m -> m.skip(ReviewDto::setRated))
                 .setPostConverter(toDtoConverter());
         modelMapper.createTypeMap(ReviewDto.class, Review.class)
                 .addMappings(m -> m.skip(Review::setLikes))
                 .addMappings(m -> m.skip(Review::setAuthor))
+                .addMappings(m -> m.skip(Review::setUsersRating))
                 .setPostConverter(toEntityConverter());
     }
 
@@ -76,19 +81,39 @@ public class ReviewMapper {
 
     private void mapCurrentUserFields(Review source, ReviewDto destination) {
         try {
-        User currentUser = userRepository.findByUsername(((UserDetails) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal()).getUsername());
-            destination.setLiked(source.getLikes().contains(currentUser));
-            destination.setReadOnlyMode(!source.getAuthor().equals(currentUser));
-            destination.setRated(source.getRaters().contains(currentUser));
+            User currentUser = getCurrentUser();
+            boolean isPermit = source.isAuthor(currentUser) || currentUser.isAdmin();
+            setCurrentUserFields(destination, source.isLiked(currentUser), !isPermit, source.isRated(currentUser));
         } catch (Exception e) {
-            destination.setLiked(false);
-            destination.setReadOnlyMode(true);
-            destination.setRated(false);
+            setCurrentUserFields(destination, false, true, false);
         }
+    }
+
+    private void setCurrentUserFields(ReviewDto destination, boolean liked, boolean readOnlyMode, boolean rated) {
+        destination.setLiked(liked);
+        destination.setReadOnlyMode(readOnlyMode);
+        destination.setRated(rated);
+    }
+
+    private User getCurrentUser() {
+        return userRepository.findByUsername(((UserDetails) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal()).getUsername());
     }
 
     private void mapSpecificFields(ReviewDto source, Review destination) {
         destination.setAuthor(userMapper.toEntity(source.getAuthor()));
+        destination.setUsersRating(0f);
+    }
+
+    public Review setDtoToEntity(ReviewDto reviewDto, Review review) {
+        setUpdates(reviewDto, review);
+        return review;
+    }
+
+    private void setUpdates(ReviewDto source, Review destination) {
+        destination.setText(source.getText());
+        destination.setTitle(source.getTitle());
+        destination.setCategory(source.getCategory());
+        destination.setAuthorRating(source.getAuthorRating());
     }
 }

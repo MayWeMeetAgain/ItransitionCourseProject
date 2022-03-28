@@ -10,20 +10,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
-import java.io.IOException;
 
 @Controller
 public class ReviewController {
 
-    @Autowired
-    ReviewService reviewService;
+    final ReviewService reviewService;
 
-//    @Autowired
-//    FirebaseStorageStrategy storageStrategy;
+    @Autowired
+    public ReviewController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
+
 
     @GetMapping("/reviews/{reviewId}")
     public String readReview(@PathVariable("reviewId") Long reviewId, Model model) {
-        model.addAttribute("review", reviewService.readById(reviewId));
+//        try {
+            model.addAttribute("review", reviewService.readById(reviewId));
+//        } catch (NullPointerException e) {
+//            throw new NoHandlerFoundException(HttpStatus.NOT_FOUND.name(), "Review not found");
+//        }
         return "review";
     }
 
@@ -35,23 +40,21 @@ public class ReviewController {
     }
 
     @PostMapping("/review/edit/{reviewId}")
-    public String saveEditedReview(@PathVariable("reviewId") Long reviewId, @ModelAttribute("review") ReviewDto dto, @RequestParam("file") File file, Authentication authentication) {
+    public String saveEditedReview(@PathVariable("reviewId") Long reviewId, @ModelAttribute("review") ReviewDto dto, Authentication authentication) {
         dto.setId(reviewId);
         reviewService.saveReview(dto);
         return "redirect:/";
     }
 
-    @GetMapping("/addReview")
+    @GetMapping("/review/add")
     public String addReview(Model model) {
         model.addAttribute("review", new ReviewDto());
         model.addAttribute("categories", Category.values());
         return "addreview";
     }
 
-    @PostMapping("/addReview")
-    public String addCard(@ModelAttribute("review") ReviewDto dto, @RequestParam("file") File file, Authentication authentication) throws IOException {
-//        storageStrategy.uploadFile(file);
-
+    @PostMapping("/review/add")
+    public String saveAddedReview(@ModelAttribute("review") ReviewDto dto, Authentication authentication) {
         reviewService.addReview(dto, authentication.getName());
         return "redirect:/";
     }

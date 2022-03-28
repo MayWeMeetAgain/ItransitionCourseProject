@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
-public class BuildSearchIndex implements ApplicationListener<ApplicationReadyEvent> {
+public class BuildingSearchIndexConfig implements ApplicationListener<ApplicationReadyEvent> {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -28,8 +28,8 @@ public class BuildSearchIndex implements ApplicationListener<ApplicationReadyEve
     }
 
     public void initializeHibernateSearch() throws InterruptedException {
-        SearchSession searchSession = Search.session( entityManager );
-        MassIndexer indexer = searchSession.massIndexer( Review.class );
+        SearchSession searchSession = Search.session(entityManager);
+        MassIndexer indexer = searchSession.massIndexer(Review.class);
         indexer.startAndWait();
     }
 

@@ -15,6 +15,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Role implements GrantedAuthority {
+    public static String ADMIN = "ROLE_ADMIN";
+
     @Id
     @Column(name = "role_id")
     private Short id;

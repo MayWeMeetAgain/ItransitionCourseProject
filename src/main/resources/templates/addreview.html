@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://lab.lepture.com/editor/editor.css" />
     <script type="text/javascript" src="https://lab.lepture.com/editor/editor.js"></script>
     <script type="text/javascript" src="https://lab.lepture.com/editor/marked.js"></script>
+    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+    <style>
+        .uploadcare--widget__button.uploadcare--widget__button_type_open {
+            background-color: #fcc914;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -27,7 +33,7 @@
                         </div>
                     </div>
                     <div class="mb-2 col-md-4 px-2">
-                        <div class="bg-light mb-2">
+                        <div class="bg-light mb-2 rounded p-2">
                             <div th:each="category : ${categories}">
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" th:field="${review.category}" th:value="${category}"
@@ -36,8 +42,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="dropzone" enctype="multipart/form-data" class="bg-light mb-2">
-                            <input type="file" name="file"><br />
+                        <div id="dropzone" class="bg-light mb-2 rounded p-2">
+                            <input
+                                    type="hidden"
+                                    role="uploadcare-uploader"
+                                    data-public-key="611a8f27b7bbad8923ff"
+                                    data-tabs="file camera gdrive gphotos"
+                                    name="picture"
+                            />
+                        </div>
+                        <div class="bg-light mb-2 rounded p-2">
+                            <span>Rating:</span>
+                            <span><select class="form-control" name="authorRating">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select></span>
                         </div>
                     </div>
                 </div>

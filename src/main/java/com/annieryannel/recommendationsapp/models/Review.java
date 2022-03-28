@@ -10,7 +10,10 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,20 +32,34 @@ public class Review {
     @FullTextField
     @Column(name = "title")
     @NotBlank
+    @Size(max = 40, message = "Title must be under 40 characters")
     private String title;
 
     @FullTextField
+    @NotBlank
     @Column(name = "text")
     private String text;
+
+    @Column(name = "picture")
+    private String picture;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
+    @NotBlank
+    @Min(value = 1, message = "Rating should not be less than 1")
+    @Max(value = 5, message = "Rating should not be greater than 5")
+    @Column(name = "author_rating")
+    private Integer authorRating;
+
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @NotBlank
+    @Min(value = 1, message = "Rating should not be less than 1")
+    @Max(value = 5, message = "Rating should not be greater than 5")
     @Column(name = "users_rating")
     private Float usersRating;
 
@@ -69,4 +86,14 @@ public class Review {
     public void addRater(User user) {raters.add(user);}
 
     public void removeLike(User user) {likes.remove(user);}
+
+    public boolean isLiked(User user) {
+        return likes.contains(user);
+    }
+
+    public boolean isRated(User user) {
+        return raters.contains(user);
+    }
+
+    public boolean isAuthor(User user) {return user.getId().equals(getAuthor().getId());}
 }

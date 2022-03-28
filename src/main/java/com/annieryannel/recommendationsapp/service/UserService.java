@@ -17,23 +17,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
+
+    final UserRepository userRepository;
+
+    final UserMapper userMapper;
+
+    final RoleRepository roleRepository;
+
+    final ReviewRepository reviewRepository;
+
+    final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    UserMapper userMapper;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    ReviewRepository reviewRepository;
-
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserService(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, ReviewRepository reviewRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.roleRepository = roleRepository;
+        this.reviewRepository = reviewRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,9 +58,7 @@ public class UserService implements UserDetailsService {
 
     private User setRegistrationParams(User user) {
         user.addRole(roleRepository.findByRole("ROLE_USER"));
-//        user.addRole(roleRepository.findByRole(Roles.ROLE_ACTIVE.getAuthority()));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        //user.setRegistrationDate(new Date());
         return user;
     }
 
@@ -70,21 +74,11 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public User getCurrentUser(){
-        String username = ((UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal()).getUsername();
-        return userRepository.findByUsername(username);
+    public List<UserDto> loadAllUsers() {
+        return allUsersToDto(userRepository.findAll());
     }
 
-    public Long countLikes(User user) {
-        long count = 0;
-        List<Review> reviews = reviewRepository.findAllByAuthorId(user.getId());
-        for (Review review : reviews)
-            count += review.getLikes().size();
-        return count;
-    }
-
-    public List<User> loadAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> allUsersToDto(List<User> users) {
+        return users.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 }

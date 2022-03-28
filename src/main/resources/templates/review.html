@@ -5,9 +5,22 @@
     <title>Review page</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <div th:text="${review.title}"></div>
-    <div th:utext="${review.text}"></div>
+<div layout:fragment="content" class="h3 text-secondary">
+    <div class="row">
+        <div class="col-md-4"><img th:src="${review.picture} + '-/scale_crop/400x300/smart/'" class="rounded card-img-top" alt="..."></div>
+        <div class="col-md-8 bg-dark rounded p-5">
+            <div class="h1" th:insert="fragments/review-templates :: review-title"></div>
+            <div th:object="${review.author}" th:insert="fragments/review-templates :: review-author">
+            </div>
+            <div>
+                <span th:text="#{review.category} + ':'"></span>
+                <span style="text-transform: lowercase;" th:text="${review.category}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="container-md p-3">
+     <div class="bg-dark rounded p-5" style="min-height: 50vh;" th:utext="${review.text}"></div>
+    </div>
 </div>
 </body>
 </html>

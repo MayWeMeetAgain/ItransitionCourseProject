@@ -1,7 +1,7 @@
 <div th:fragment="card" th:each="review : ${cards}" th:id="'card' + ${review.id}" class="card shadow bg-dark m-2 text-secondary " style="width: 19rem;">
-    <img src="/images/frog.jpg" class="card-img-top" alt="...">
+    <img th:src="${review.picture} + '-/scale_crop/400x300/smart/'" class="card-img-top" alt="...">
     <div class="card-body">
-        <div th:insert="fragments/review-templates :: review-title"></div>
+        <div class="h3" th:insert="fragments/review-templates :: review-title"></div>
         <div class="card-text text-start">
             <div th:object="${review.author}" th:insert="fragments/review-templates :: review-author">
             </div>
@@ -9,9 +9,23 @@
                 <span th:text="#{review.category} + ':'"></span>
                 <span style="text-transform: lowercase;" th:text="${review.category}"></span>
             </div>
-            <div class="rating" th:insert="fragments/rating :: rating"></div>
+            <div th:id="'author_rating' + ${review.id}" class="row justify-content-md-start">
+                <span class="col-md-6" th:text="#{review.rating.author} + ': '"></span>
+<!--                <span class="col-md-1 px-0" th:text="${review.authorRating}"></span>-->
+                <span class="rating col-md-6" th:insert="fragments/review-templates :: stars(${review.authorRating})"></span>
+                <script src="/js/rate.js"></script>
+                <script>
+                    var authorRating = [[${review.authorRating}]]
+                    var author_id = 'author_rating' + [[${review.id}]];
+                    showRating(authorRating, author_id);
+                </script>
+            </div>
+            <div class="row justify-content-md-start">
+            <span class="col-md-6" th:text="#{review.rating.user} + ': '"></span>
+            <span th:id="'user_rating' + ${review.id}" class="col-md-6 rating" th:insert="fragments/rating :: rating"></span>
 <!--            <div class="rating" th:if="${review.isRated}" th:insert="fragments/rate-result :: rate-result"></div>-->
 <!--            <div class="rating" th:unless="${review.isRated}" th:insert="fragments/rating :: rating"></div>-->
+            </div>
         </div>
         </div>
         <div class="row my-2 mx-1 text-start">

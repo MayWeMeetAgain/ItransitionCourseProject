@@ -28,33 +28,31 @@ import static org.springframework.http.RequestEntity.put;
 @Transactional
 public class ReviewService {
 
-    @Autowired
-    UserService userService;
+    final UserService userService;
+
+    final ReviewRepository reviewRepository;
+
+    final RoleRepository roleRepository;
+
+    final ReviewMapper reviewMapper;
 
     @Autowired
-    ReviewRepository reviewRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    ReviewMapper reviewMapper;
+    public ReviewService(UserService userService, ReviewRepository reviewRepository, RoleRepository roleRepository, ReviewMapper reviewMapper) {
+        this.userService = userService;
+        this.reviewRepository = reviewRepository;
+        this.roleRepository = roleRepository;
+        this.reviewMapper = reviewMapper;
+    }
 
     public List<ReviewDto> loadAll() {
-        return reviewRepository.findAll().stream().map(review -> reviewMapper.toDto(review))
-                .collect(Collectors.toList());
+        return allReviewsToDto(reviewRepository.findAll());
     }
 
     public ReviewDto loadById(Long id) {
         return reviewMapper.toDto(reviewRepository.findById(id).get());
     }
 
-    public List<ReviewDto> loadAllByUserId(Long userId) {
-        return reviewRepository.findAllByAuthorId(userId).stream().map(review -> reviewMapper.toDto(review))
-                .collect(Collectors.toList());
-    }
-
-    public ReviewDto readById(Long id) {
+    public ReviewDto readById(Long id) throws NullPointerException {
         ReviewDto dto = loadById(id);
         dto.setText(MarkdownService.markdownToHTML(dto.getText()));
         return dto;
@@ -62,32 +60,29 @@ public class ReviewService {
 
     public void saveReview(ReviewDto reviewDto) {
         Review review = reviewRepository.getById(reviewDto.getId());
-        review.setText(reviewDto.getText());
-        review.setTitle(reviewDto.getTitle());
-        review.setCategory(reviewDto.getCategory());
-        reviewRepository.save(review);
+        reviewRepository.save(reviewMapper.setDtoToEntity(reviewDto, review));
     }
 
     public void addReview(ReviewDto reviewDto, String authorName) {
-        UserDto userDto = userService.getUserDtoByUsername(authorName);
-        reviewDto.setAuthor(userDto);
         Review review = reviewMapper.toEntity(reviewDto);
         review.setAuthor(userService.getUserByUsername(authorName));
         reviewRepository.save(review);
     }
 
     public Integer likeReview(Long reviewId, String username) {
-        User user = userService.getUserByUsername(username);
-        Review review = reviewRepository.getById(reviewId);
-        review.addLike(user);
-        reviewRepository.save(review);
-        return review.getLikes().size();
+        Handler func = Review::addLike;
+        return likeHandler(reviewId, username, func);
     }
 
     public Integer unlikeReview(Long reviewId, String username) {
+        Handler func = Review::removeLike;
+        return likeHandler(reviewId, username, func);
+    }
+
+    public Integer likeHandler(Long reviewId, String username, Handler handler) {
         User user = userService.getUserByUsername(username);
         Review review = reviewRepository.getById(reviewId);
-        review.removeLike(user);
+        handler.handle(review, user);
         reviewRepository.save(review);
         return review.getLikes().size();
     }
@@ -108,19 +103,33 @@ public class ReviewService {
 
     public List<ReviewDto> search(String text) {
         List<Review> reviews = reviewRepository.search(text);
-        return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
+        return allReviewsToDto(reviews);
     }
 
     public void deleteReviewById(Long reviewId, Authentication authentication) {
-        Role admin = roleRepository.findByRole("ROLE_ADMIN");
         Review review = reviewRepository.getById(reviewId);
-        if (authentication.getAuthorities().contains(admin) || authentication.getName().equals(review.getAuthor().getUsername()) )
+        if (isPermit(review, authentication))
             reviewRepository.deleteById(reviewId);
+    }
+
+    public boolean isPermit(Review review, Authentication authentication) {
+        Role admin = roleRepository.findByRole("ROLE_ADMIN");
+        boolean isAdmin = authentication.getAuthorities().contains(admin);
+        boolean isAuthor = authentication.getName().equals(review.getAuthor().getUsername());
+        return isAdmin || isAuthor;
     }
 
     public List<ReviewDto> getReviewsByUsername(String username) {
         Long id = userService.getUserByUsername(username).getId();
         List<Review> reviews = reviewRepository.findAllByAuthorId(id);
-        return reviews.stream().map(m -> reviewMapper.toDto(m)).collect(Collectors.toList());
+        return allReviewsToDto(reviews);
     }
+
+    public List<ReviewDto> allReviewsToDto(List<Review> reviews) {
+        return reviews.stream().map(reviewMapper::toDto).collect(Collectors.toList());
+    }
+}
+
+interface Handler {
+    void handle(Review x, User y);
 }

@@ -19,11 +19,15 @@ import java.util.List;
 @Component
 public class UserMapper {
 
-    @Autowired
-    ModelMapper modelMapper;
+    final ModelMapper modelMapper;
+
+    final ReviewRepository reviewRepository;
 
     @Autowired
-    ReviewRepository reviewRepository;
+    public UserMapper(ModelMapper modelMapper, ReviewRepository reviewRepository) {
+        this.modelMapper = modelMapper;
+        this.reviewRepository = reviewRepository;
+    }
 
     @PostConstruct
     public void setupMapper() {
@@ -64,11 +68,8 @@ public class UserMapper {
 
 
     public Integer countLikes(User user) {
-        int count = 0;
         List<Review> reviews = reviewRepository.findAllByAuthorId(user.getId());
-        for (Review review : reviews)
-            count += review.getLikes().size();
-        return count;
+        return reviews.stream().map(x -> x.getLikes().size()).reduce(0, Integer::sum);
     }
 
     private void mapSpecificFields(UserDto source, User destination) {

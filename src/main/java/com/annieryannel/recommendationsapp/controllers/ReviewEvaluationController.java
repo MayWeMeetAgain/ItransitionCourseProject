@@ -6,41 +6,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-public class ReviewsController {
+public class ReviewEvaluationController {
+
+    final ReviewService reviewService;
 
     @Autowired
-    ReviewService reviewService;
-
-    @GetMapping("/reviews/getAll")
-    public List<ReviewDto> getAllCards() {
-        return reviewService.loadAll();
+    public ReviewEvaluationController(ReviewService reviewService) {
+        this.reviewService = reviewService;
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/reviews/{reviewId}/rate")
+//    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/review/rate/{reviewId}")
     public Float rateReview(@RequestParam Integer rate, @PathVariable("reviewId") Long reviewId , Authentication authentication) {
         return reviewService.rateReview(rate, reviewId, authentication.getName());
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/reviews/{reviewId}/like")
+//    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/review/like/{reviewId}")
     public Integer likeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
        return reviewService.likeReview(reviewId, authentication.getName());
     }
 
-    @DeleteMapping("/reviews/{reviewId}/like")
+//    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/review/like/{reviewId}")
     public Integer unlikeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
         return reviewService.unlikeReview(reviewId, authentication.getName());
     }
 
+//    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/review/delete/{reviewId}")
     public void deleteReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
         reviewService.deleteReviewById(reviewId, authentication);
     }
+
 }

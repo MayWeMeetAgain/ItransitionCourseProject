@@ -16,11 +16,15 @@ import javax.validation.Valid;
 @Controller
 public class UserPageController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    private final ReviewService reviewService;
 
     @Autowired
-    private ReviewService reviewService;
+    public UserPageController(UserService userService, ReviewService reviewService) {
+        this.userService = userService;
+        this.reviewService = reviewService;
+    }
 
     @GetMapping("/user/{username}")
     public String showProfile(@PathVariable("username") String username, Model model) {

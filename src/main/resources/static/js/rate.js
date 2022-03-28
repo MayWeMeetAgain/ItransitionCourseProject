@@ -1,19 +1,20 @@
 function rate(rate, reviewId) {
-    let url = "/reviews/" + reviewId + "/rate";
+    let url = "/review/rate/" + reviewId;
     $.post(url, {rate : rate})
         .done(function(msg){
-            showRating(msg, reviewId);
+            showRating(msg,'user_rating' + reviewId);
             changeRatingNumbers(msg, reviewId);
         })
         .fail(function(xhr, status, error) {
-            // error handling
-        });;
+            location.href="/login";
+        });
 }
 
 
 function changeRatingNumbers(rating, id) {
     let card_id = "card" + id;
-    let preStarsRating = document.getElementById(card_id).getElementsByClassName("rating-number")[0];
+    let user_rating_id = 'user_rating' + id;
+    let preStarsRating = document.getElementById(user_rating_id).getElementsByClassName("rating-number")[0];
     preStarsRating.textContent = rating;
 
     let preTitleRating = document.getElementById(card_id).getElementsByClassName("title-rating")[0];
@@ -21,9 +22,8 @@ function changeRatingNumbers(rating, id) {
 }
 
 function showRating(rating, id) {
-    let card_id = "card" + id;
-    var stars_in = document.getElementById(card_id).getElementsByClassName("stars__in");
-    var stars = document.getElementById(card_id).getElementsByClassName("star");
+    var stars_in = document.getElementById(id).getElementsByClassName("stars__in");
+    var stars = document.getElementById(id).getElementsByClassName("star");
 
     let full = Math.trunc(rating);
     let partly = rating - full;

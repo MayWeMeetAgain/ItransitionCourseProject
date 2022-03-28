@@ -3,6 +3,7 @@ package com.annieryannel.recommendationsapp.config;
 import com.annieryannel.recommendationsapp.utils.StringToEnumConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,37 +31,8 @@ public class MvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
-    }
-
-    @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToEnumConverter());
-    }
-
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource msgSrc = new ReloadableResourceBundleMessageSource();
-        msgSrc.setBasename("classpath:i18n/messages");
-        msgSrc.setDefaultEncoding("UTF-8");
-        return msgSrc;
-    }
-
-    @Bean
-    public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("lang");
-        return localeChangeInterceptor;
-    }
-
-    @Bean
-    public LocaleResolver localeResolver() {
-        CookieLocaleResolver resolver = new CookieLocaleResolver();
-        resolver.setCookieMaxAge(60 * 60);
-        resolver.setDefaultLocale(Locale.ENGLISH);
-        resolver.setCookieName("localeInfo");
-        return resolver;
     }
 
     @Bean

@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class MainController {
+public class HomePageController {
+
+    private final ReviewService reviewService;
 
     @Autowired
-    private ReviewService reviewService;
+    public HomePageController(ReviewService reviewService) {
+        this.reviewService = reviewService;
+    }
 
     @GetMapping("/")
-    public String userAction(Model model) {
+    public String showHomePage(Model model) {
         model.addAttribute("cards", reviewService.loadAll());
-        //model.addAttribute("reviews", reviewService.loadAllReviews());
         return "home";
     }
 }

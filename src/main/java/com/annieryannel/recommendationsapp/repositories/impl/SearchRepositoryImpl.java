@@ -11,13 +11,15 @@ import java.util.List;
 public class SearchRepositoryImpl implements SearchRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public List<Review> search(String terms) {
-        return Search.session(em).search(Review.class)
+        return Search.session(entityManager).search(Review.class)
                 .where(f -> f.match()
                         .fields("title", "text")
                         .matching(terms)).fetchAllHits();
     }
+
 }
+

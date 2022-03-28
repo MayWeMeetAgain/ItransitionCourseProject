@@ -13,7 +13,9 @@ public class ReviewDto {
     private String title;
     private String text;
     private UserDto author;
+    private Integer authorRating;
     private Category category;
+    private String picture;
     private Float usersRating;
     private boolean isRated;
     private Integer likes;

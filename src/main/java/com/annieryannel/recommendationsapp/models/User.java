@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Date;
@@ -26,15 +27,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
     @NotBlank
+    @Column(name = "username")
     private String username;
 
+    @Email
+    @NotBlank
     @Column(name = "email")
     private  String email;
 
-    @Column(name = "password")
     @NotBlank
+    @Column(name = "password")
     private String password;
 
     @Transient
@@ -85,5 +88,9 @@ public class User implements UserDetails {
 
     public void addRole(Role role) {
         roles.add(role);
+    }
+
+    public boolean isAdmin() {
+        return roles.stream().map(Role::getRole).collect(Collectors.toList()).contains(Role.ADMIN);
     }
 }
