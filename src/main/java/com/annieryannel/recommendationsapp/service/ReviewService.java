@@ -59,7 +59,7 @@ public class ReviewService {
             return reviewMapper.toDto(review);
     }
 
-    public ReviewDto readById(Long id) throws NullPointerException {
+    public ReviewDto readById(Long id) throws NullPointerException, NoSuchElementException {
         try {
             ReviewDto dto = reviewMapper.toDto(reviewRepository.findById(id).get());
             dto.setText(MarkdownService.markdownToHTML(dto.getText()));
