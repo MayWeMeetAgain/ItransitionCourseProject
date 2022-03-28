@@ -24,25 +24,21 @@ public class ReviewEvaluationController {
         this.reviewService = reviewService;
     }
 
-//    @PreAuthorize("isAuthenticated()")
     @PostMapping("/review/rate/{reviewId}")
     public Float rateReview(@RequestParam Integer rate, @PathVariable("reviewId") Long reviewId , Authentication authentication) {
         return reviewService.rateReview(rate, reviewId, authentication.getName());
     }
 
-//    @PreAuthorize("isAuthenticated()")
     @PostMapping("/review/like/{reviewId}")
     public Integer likeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
        return reviewService.likeReview(reviewId, authentication.getName());
     }
 
-//    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/review/like/{reviewId}")
     public Integer unlikeReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
         return reviewService.unlikeReview(reviewId, authentication.getName());
     }
 
-//    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/review/delete/{reviewId}")
     public void deleteReview(@PathVariable("reviewId") Long reviewId, Authentication authentication) {
         reviewService.deleteReviewById(reviewId, authentication);

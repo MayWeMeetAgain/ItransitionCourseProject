@@ -9,15 +9,20 @@ import com.annieryannel.recommendationsapp.models.User;
 import com.annieryannel.recommendationsapp.repositories.ReviewRepository;
 import com.annieryannel.recommendationsapp.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.MethodNotAllowedException;
+import org.webjars.NotFoundException;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,19 +53,22 @@ public class ReviewService {
         return allReviewsToDto(reviewRepository.findAll());
     }
 
-    public ReviewDto loadById(Long id) {
-        return reviewMapper.toDto(reviewRepository.findById(id).get());
+    public ReviewDto loadById(Long id, Authentication authentication) throws MethodNotAllowedException {
+            Review review = reviewRepository.findById(id).get();
+            if (!isPermit(review, authentication)) throw new MethodNotAllowedException(HttpMethod.GET, null);
+            return reviewMapper.toDto(review);
     }
 
     public ReviewDto readById(Long id) throws NullPointerException {
-        ReviewDto dto = loadById(id);
+        ReviewDto dto = reviewMapper.toDto(reviewRepository.findById(id).get());
         dto.setText(MarkdownService.markdownToHTML(dto.getText()));
         return dto;
     }
 
-    public void saveReview(ReviewDto reviewDto) {
+    public void saveReview(ReviewDto reviewDto, Authentication authentication) throws MethodNotAllowedException {
         Review review = reviewRepository.getById(reviewDto.getId());
         reviewRepository.save(reviewMapper.setDtoToEntity(reviewDto, review));
+        if (!isPermit(review, authentication)) throw new MethodNotAllowedException(HttpMethod.GET, null);
     }
 
     public void addReview(ReviewDto reviewDto, String authorName) {
@@ -91,14 +99,21 @@ public class ReviewService {
         User user = userService.getUserByUsername(username);
         Review review = reviewRepository.getById(reviewId);
         Set<User> raters = review.getRaters();
-        Float userRating = review.getUsersRating();
         if (raters.contains(user))
-            return userRating;
-        review.setUsersRating((userRating * raters.size() + rate) / (raters.size() + 1));
+            return review.getUsersRating();
+        return setNewRate(review, user, raters.size(), rate);
+    }
 
+    public Float setNewRate(Review review, User user, Integer ratersAmount, Integer newRate) {
+        Float ratingResult = calculateRating(review.getUsersRating(), ratersAmount, newRate);
+        review.setUsersRating(ratingResult);
         review.addRater(user);
         reviewRepository.save(review);
-        return review.getUsersRating();
+        return ratingResult;
+    }
+
+    public Float calculateRating (Float usersRating, Integer ratersAmount, Integer newRate) {
+        return (usersRating * ratersAmount + newRate) / (ratersAmount + 1);
     }
 
     public List<ReviewDto> search(String text) {

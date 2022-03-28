@@ -6,7 +6,8 @@ function rate(rate, reviewId) {
             changeRatingNumbers(msg, reviewId);
         })
         .fail(function(xhr, status, error) {
-            location.href="/login";
+            if (xhr.status === 401)
+                location.href="/login";
         });
 }
 

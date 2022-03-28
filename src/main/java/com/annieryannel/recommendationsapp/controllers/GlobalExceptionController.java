@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionController {
@@ -25,12 +26,20 @@ public class GlobalExceptionController {
     }
 
 
-//    @ExceptionHandler(Exception.class)
-//    public ModelAndView handleError404(HttpServletRequest request, Exception e) {
-//        ModelAndView mav = new ModelAndView("/error");
-//        mav.addObject("exception", e);
-//        mav.addObject("errorcode", "404");
-//        return mav;
-//    }
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public ModelAndView handleError405(HttpServletRequest request, Exception e) {
+        ModelAndView mav = new ModelAndView("/error");
+        mav.addObject("exception", "Method Not Allowed");
+        mav.addObject("errorcode", "405");
+        return mav;
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ModelAndView handleError404(HttpServletRequest request, Exception e) {
+        ModelAndView mav = new ModelAndView("/error");
+        mav.addObject("exception", "No such review");
+        mav.addObject("errorcode", "404");
+        return mav;
+    }
 
 }

@@ -4,12 +4,12 @@ import com.annieryannel.recommendationsapp.DTO.ReviewDto;
 import com.annieryannel.recommendationsapp.service.ReviewService;
 import com.annieryannel.recommendationsapp.utils.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 
 @Controller
 public class ReviewController {
@@ -24,17 +24,14 @@ public class ReviewController {
 
     @GetMapping("/reviews/{reviewId}")
     public String readReview(@PathVariable("reviewId") Long reviewId, Model model) {
-//        try {
             model.addAttribute("review", reviewService.readById(reviewId));
-//        } catch (NullPointerException e) {
-//            throw new NoHandlerFoundException(HttpStatus.NOT_FOUND.name(), "Review not found");
-//        }
+
         return "review";
     }
 
     @GetMapping("/review/edit/{reviewId}")
-    public String editReview(@PathVariable("reviewId") Long reviewId, Model model) {
-        model.addAttribute("review", reviewService.loadById(reviewId));
+    public String editReview(@PathVariable("reviewId") Long reviewId, Model model, Authentication authentication) {
+        model.addAttribute("review", reviewService.loadById(reviewId, authentication));
         model.addAttribute("categories", Category.values());
         return "addreview";
     }
@@ -42,7 +39,7 @@ public class ReviewController {
     @PostMapping("/review/edit/{reviewId}")
     public String saveEditedReview(@PathVariable("reviewId") Long reviewId, @ModelAttribute("review") ReviewDto dto, Authentication authentication) {
         dto.setId(reviewId);
-        reviewService.saveReview(dto);
+        reviewService.saveReview(dto, authentication);
         return "redirect:/";
     }
 
