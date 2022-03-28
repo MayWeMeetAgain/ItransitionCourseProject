@@ -133,7 +133,7 @@ public class ReviewService {
 
     public boolean isPermit(Review review, Authentication authentication) {
         Role admin = roleRepository.findByRole("ROLE_ADMIN");
-        boolean isAdmin = authentication.getAuthorities().contains(admin);
+        boolean isAdmin = userService.getUserByUsername(authentication.getName()).isAdmin();
         boolean isAuthor = authentication.getName().equals(review.getAuthor().getUsername());
         return isAdmin || isAuthor;
     }
