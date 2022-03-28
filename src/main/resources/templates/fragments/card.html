@@ -11,7 +11,6 @@
             </div>
             <div th:id="'author_rating' + ${review.id}" class="row justify-content-md-start">
                 <span class="col-md-6" th:text="#{review.rating.author} + ': '"></span>
-<!--                <span class="col-md-1 px-0" th:text="${review.authorRating}"></span>-->
                 <span class="rating col-md-6" th:insert="fragments/review-templates :: stars(${review.authorRating})"></span>
                 <script src="/js/rate.js"></script>
                 <script>
@@ -21,10 +20,8 @@
                 </script>
             </div>
             <div class="row justify-content-md-start">
-            <span class="col-md-6" th:text="#{review.rating.user} + ': '"></span>
-            <span th:id="'user_rating' + ${review.id}" class="col-md-6 rating" th:insert="fragments/rating :: rating"></span>
-<!--            <div class="rating" th:if="${review.isRated}" th:insert="fragments/rate-result :: rate-result"></div>-->
-<!--            <div class="rating" th:unless="${review.isRated}" th:insert="fragments/rating :: rating"></div>-->
+                <span class="col-md-6" th:text="#{review.rating.user} + ': '"></span>
+                <span th:id="'user_rating' + ${review.id}" class="col-md-6 rating" th:insert="fragments/rating :: rating"></span>
             </div>
         </div>
         </div>
