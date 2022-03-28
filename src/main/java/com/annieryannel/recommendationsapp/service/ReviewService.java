@@ -60,9 +60,11 @@ public class ReviewService {
     }
 
     public ReviewDto readById(Long id) throws NullPointerException {
-        ReviewDto dto = reviewMapper.toDto(reviewRepository.findById(id).get());
-        dto.setText(MarkdownService.markdownToHTML(dto.getText()));
-        return dto;
+        try {
+            ReviewDto dto = reviewMapper.toDto(reviewRepository.findById(id).get());
+            dto.setText(MarkdownService.markdownToHTML(dto.getText()));
+            return dto;
+        } catch (Exception e) { throw new NoSuchElementException("No such Review"); }
     }
 
     public void saveReview(ReviewDto reviewDto, Authentication authentication) throws MethodNotAllowedException {
