@@ -56,7 +56,7 @@ public class ReviewController {
     @PostMapping("/review/add")
     public String saveAddedReview(@ModelAttribute("review") @Valid ReviewDto dto, BindingResult bindingResult, Authentication authentication) {
         reviewService.addReview(dto, authentication.getName());
-        return "redirect:/";
+        return "addreview";
     }
 
 }
