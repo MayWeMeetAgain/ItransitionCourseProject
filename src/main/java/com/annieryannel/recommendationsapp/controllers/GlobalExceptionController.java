@@ -3,6 +3,7 @@ package com.annieryannel.recommendationsapp.controllers;
 import com.force.api.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.support.ErrorMessage;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,19 +22,17 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionController {
 
     @ExceptionHandler(MethodNotAllowedException.class)
-    public ModelAndView handleError405(HttpServletRequest request, Exception e) {
-        ModelAndView mav = new ModelAndView("/error");
-        mav.addObject("exception", "Method Not Allowed");
-        mav.addObject("errorcode", "405");
-        return mav;
+    public String handleError405(HttpServletRequest request, Exception e, Model model) {
+        model.addAttribute("exception", "Method Not Allowed");
+        model.addAttribute("errorcode", "405");
+        return "error";
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ModelAndView handleError404(HttpServletRequest request, Exception e) {
-        ModelAndView mav = new ModelAndView("/error");
-        mav.addObject("exception", "No such review");
-        mav.addObject("errorcode", "404");
-        return mav;
+    public String handleError404(HttpServletRequest request, Exception e, Model model) {
+        model.addAttribute("exception", "No such review");
+        model.addAttribute("errorcode", "404");
+        return "error";
     }
 
 }
