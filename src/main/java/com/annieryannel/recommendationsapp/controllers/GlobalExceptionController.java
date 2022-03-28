@@ -20,12 +20,6 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class GlobalExceptionController {
 
-    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-    public ModelAndView auth(ModelMap model) {
-        return new ModelAndView("redirect:/login", model);
-    }
-
-
     @ExceptionHandler(MethodNotAllowedException.class)
     public ModelAndView handleError405(HttpServletRequest request, Exception e) {
         ModelAndView mav = new ModelAndView("/error");
