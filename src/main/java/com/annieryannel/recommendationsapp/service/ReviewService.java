@@ -3,6 +3,7 @@ package com.annieryannel.recommendationsapp.service;
 import com.annieryannel.recommendationsapp.DTO.ReviewDto;
 import com.annieryannel.recommendationsapp.DTO.UserDto;
 import com.annieryannel.recommendationsapp.mappers.ReviewMapper;
+import com.annieryannel.recommendationsapp.mappers.UserMapper;
 import com.annieryannel.recommendationsapp.models.Review;
 import com.annieryannel.recommendationsapp.models.Role;
 import com.annieryannel.recommendationsapp.models.User;
@@ -40,13 +41,15 @@ public class ReviewService {
     final RoleRepository roleRepository;
 
     final ReviewMapper reviewMapper;
+    final UserMapper userMapper;
 
     @Autowired
-    public ReviewService(UserService userService, ReviewRepository reviewRepository, RoleRepository roleRepository, ReviewMapper reviewMapper) {
+    public ReviewService(UserService userService, ReviewRepository reviewRepository, RoleRepository roleRepository, ReviewMapper reviewMapper, UserMapper userMapper) {
         this.userService = userService;
         this.reviewRepository = reviewRepository;
         this.roleRepository = roleRepository;
         this.reviewMapper = reviewMapper;
+        this.userMapper = userMapper;
     }
 
     public List<ReviewDto> loadAll() {
@@ -60,11 +63,9 @@ public class ReviewService {
     }
 
     public ReviewDto readById(Long id) throws NullPointerException, NoSuchElementException {
-        try {
             ReviewDto dto = reviewMapper.toDto(reviewRepository.findById(id).get());
             dto.setText(MarkdownService.markdownToHTML(dto.getText()));
             return dto;
-        } catch (Exception e) { throw new NoSuchElementException("No such Review"); }
     }
 
     public void saveReview(ReviewDto reviewDto, Authentication authentication) throws MethodNotAllowedException {
@@ -73,7 +74,8 @@ public class ReviewService {
         if (!isPermit(review, authentication)) throw new MethodNotAllowedException(HttpMethod.GET, null);
     }
 
-    public void addReview(ReviewDto reviewDto, String authorName) {
+    public void addReview(ReviewDto reviewDto, String authorName, Authentication authentication) {
+        reviewDto.setAuthor(userMapper.toDto(userService.getUserByUsername(authentication.getName())));
         Review review = reviewMapper.toEntity(reviewDto);
         review.setAuthor(userService.getUserByUsername(authorName));
         reviewRepository.save(review);

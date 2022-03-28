@@ -55,7 +55,7 @@ public class ReviewController {
 
     @PostMapping("/review/add")
     public String saveAddedReview(@ModelAttribute("review") @Valid ReviewDto dto, BindingResult bindingResult, Authentication authentication) {
-        reviewService.addReview(dto, authentication.getName());
+        reviewService.addReview(dto, authentication.getName(), authentication);
         return "addreview";
     }
 

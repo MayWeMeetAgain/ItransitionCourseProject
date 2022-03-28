@@ -21,18 +21,18 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class GlobalExceptionController {
 
-//    @ExceptionHandler(MethodNotAllowedException.class)
-//    public String handleError405(HttpServletRequest request, Exception e, Model model) {
-//        model.addAttribute("exception", "Method Not Allowed");
-//        model.addAttribute("errorcode", "405");
-//        return "error";
-//    }
-//
-//    @ExceptionHandler(NoSuchElementException.class)
-//    public String handleError404(HttpServletRequest request, Exception e, Model model) {
-//        model.addAttribute("exception", "No such review");
-//        model.addAttribute("errorcode", "404");
-//        return "error";
-//    }
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public String handleError405(HttpServletRequest request, Exception e, Model model) {
+        model.addAttribute("exception", "Method Not Allowed");
+        model.addAttribute("errorcode", "405");
+        return "error";
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public String handleError404(HttpServletRequest request, Exception e, Model model) {
+        model.addAttribute("exception", "No such review");
+        model.addAttribute("errorcode", "404");
+        return "error";
+    }
 
 }
